@@ -65,12 +65,14 @@ void power_save()
   set_sleep_mode(SLEEP_MODE_IDLE);
   sleep_enable();
   power_adc_disable();
-  power_spi_disable();
-  power_twi_disable();
+  //power_spi_disable();
+  //power_twi_disable();
 
-  pin_write(LED_PIN, LOW);
+  //pin_write(LED_PIN, LOW);
+  //PORTE &= ~(1<<2);
   sleep_mode();    // Go to sleep
-  pin_write(LED_PIN, HIGH);
+  //pin_write(LED_PIN, HIGH);
+  //PORTE |= 1<<2;
   
   sleep_disable();  // Resume after wake up
   power_all_enable();

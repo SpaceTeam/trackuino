@@ -19,8 +19,6 @@
 #include "ax25.h"
 #include "gps.h"
 #include "aprs.h"
-#include "sensors_avr.h"
-#include "sensors_pic32.h"
 #include <stdio.h>
 #include <stdlib.h>
 #if (ARDUINO + 1) >= 100
@@ -68,17 +66,7 @@ void aprs_send()
   ax25_send_string("/A=");            // Altitude (feet). Goes anywhere in the comment area
   snprintf(temp, 7, "%06ld", (long)(meters_to_feet(gps_altitude) + 0.5));
   ax25_send_string(temp);
-  ax25_send_string("/Ti=");
-  snprintf(temp, 6, "%d", sensors_int_lm60());
-  ax25_send_string(temp);
-  ax25_send_string("/Te=");
-  snprintf(temp, 6, "%d", sensors_ext_lm60());
-  ax25_send_string(temp);
-  ax25_send_string("/V=");
-  snprintf(temp, 6, "%d", sensors_vin());
-  ax25_send_string(temp);
   ax25_send_byte(' ');
-  ax25_send_string(APRS_COMMENT);     // Comment
   ax25_send_footer();
 
   ax25_flush_frame();                 // Tell the modem to go

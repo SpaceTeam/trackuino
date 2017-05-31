@@ -38,12 +38,9 @@
 #include "afsk_avr.h"
 #include "afsk_pic32.h"
 #include "aprs.h"
-#include "buzzer.h"
 #include "gps.h"
 #include "pin.h"
 #include "power.h"
-#include "sensors_avr.h"
-#include "sensors_pic32.h"
 
 // Arduino/AVR libs
 #if (ARDUINO + 1) >= 100
@@ -61,27 +58,19 @@ static int32_t next_aprs = 0;
 
 void setup()
 {
-  pinMode(LED_PIN, OUTPUT);
-  pin_write(LED_PIN, LOW);
+  //5v on
+  PORTC |= 1 << 3;
+  DDRC |= (1 << 2);
 
   Serial.begin(GPS_BAUDRATE);
 #ifdef DEBUG_RESET
   Serial.println("RESET");
 #endif
 
-  buzzer_setup();
   afsk_setup();
   gps_setup();
-  sensors_setup();
 
-#ifdef DEBUG_SENS
-  Serial.print("Ti=");
-  Serial.print(sensors_int_lm60());
-  Serial.print(", Te=");
-  Serial.print(sensors_ext_lm60());
-  Serial.print(", Vin=");
-  Serial.println(sensors_vin());
-#endif
+
 
   // Do not start until we get a valid time reference
   // for slotted transmissions.
@@ -119,11 +108,7 @@ void get_pos()
   } while ( (millis() - timeout < VALID_POS_TIMEOUT) && ! valid_pos) ;
 
   if (valid_pos) {
-    if (gps_altitude > BUZZER_ALTITUDE) {
-      buzzer_off();   // In space, no one can hear you buzz
-    } else {
-      buzzer_on();
-    }
+
   }
 }
 
