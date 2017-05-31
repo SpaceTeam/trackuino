@@ -39,7 +39,6 @@
 #include "afsk_pic32.h"
 #include "aprs.h"
 #include "gps.h"
-#include "pin.h"
 #include "power.h"
 
 // Arduino/AVR libs

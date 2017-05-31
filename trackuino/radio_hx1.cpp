@@ -16,7 +16,6 @@
  */
 
 #include "config.h"
-#include "pin.h"
 #include "radio_hx1.h"
 #if (ARDUINO + 1) >= 100
 #  include <Arduino.h>

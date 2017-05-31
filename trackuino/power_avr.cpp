@@ -25,7 +25,6 @@
 #  include <WProgram.h>
 #endif
 #include "config.h"
-#include "pin.h"
 #include "power.h"
 
 void disable_bod_and_sleep()
