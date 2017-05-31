@@ -39,7 +39,7 @@
 // - Cars:       9
 // - Home:       0
 // - IGate:      5
-#define S_CALLSIGN      "MYCALL"
+#define S_CALLSIGN      "OE2DBL"
 #define S_CALLSIGN_ID   11
 
 // Destination callsign: APRS (with SSID=0) is usually okay.
@@ -56,7 +56,7 @@
 // APRS comment: this goes in the comment portion of the APRS message. You
 // might want to keep this short. The longer the packet, the more vulnerable
 // it is to noise. 
-#define APRS_COMMENT    "Trackuino reminder: replace callsign with your own"
+#define APRS_COMMENT    "#works"
 
 
 // --------------------------------------------------------------------------
@@ -83,7 +83,7 @@
 // 00:02:00, etc. and the second balloon will transmit at 00:00:30, 00:01:30,
 // 00:02:30, etc.
 #define APRS_SLOT     0     // seconds. -1 disables slotted transmissions
-#define APRS_PERIOD   60    // seconds
+#define APRS_PERIOD   10    // seconds
 
 // GPS baud rate (in bits per second). This is also the baud rate at which
 // debug data will be printed out the serial port.
@@ -110,7 +110,7 @@
 // Radio config (radio_hx1.cpp)
 // --------------------------------------------------------------------------
 
-// This is the PTT pin
+// This is the PTT pin ( push to talk )
 #define PTT_PIN           4
 
 // --------------------------------------------------------------------------
