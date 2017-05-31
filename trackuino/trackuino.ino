@@ -36,7 +36,6 @@
 // Trackuino custom libs
 #include "config.h"
 #include "afsk_avr.h"
-#include "afsk_pic32.h"
 #include "aprs.h"
 #include "gps.h"
 #include "power.h"
