@@ -30,9 +30,12 @@ extern char gps_aprs_lon[10];
 extern float gps_course;
 extern float gps_speed;
 extern float gps_altitude;
+extern uint8_t gps_satellites;
+extern uint8_t gps_fixq;
 
 void gps_setup();
 bool gps_decode(char c);
 void gps_reset_parser();
 
 #endif
+
