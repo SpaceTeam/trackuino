@@ -110,8 +110,8 @@ static char new_aprs_lon[10];
 static float new_course;
 static float new_speed;
 static float new_altitude;
-static int new_satellites;
-static int new_fixq;
+static byte new_satellites;
+static byte new_fixq;
 
 // Public (extern) variables, readable from other modules
 char gps_time[7];       // HHMMSS
@@ -123,8 +123,8 @@ char gps_aprs_lon[10];
 float gps_course = 0;
 float gps_speed = 0;
 float gps_altitude = 0;
-int gps_satellites = 0;
-int gps_fixq = 0;
+byte gps_satellites = 0;
+byte gps_fixq = 0;
 
 // Module functions
 unsigned char from_hex(char a) 

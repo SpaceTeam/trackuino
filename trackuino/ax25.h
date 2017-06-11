@@ -30,3 +30,4 @@ void ax25_send_footer();
 void ax25_flush_frame();
 
 #endif
+
