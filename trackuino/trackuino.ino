@@ -69,7 +69,7 @@ void setup()
   gps_setup();
 
 
-
+  Serial.begin(GPS_BAUDRATE);
   // Do not start until we get a valid time reference
   // for slotted transmissions.
   if (APRS_SLOT >= 0) {
