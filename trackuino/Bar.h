@@ -8,20 +8,20 @@
 class Bar
 {
   public:
-  uint16_t c1, c2, c3, c4, c5, c6;
-  int32_t TEMP, dT;
+  uint16_t C1, C2, C3, C4, C5, C6;
+  int32_t TEMP, dT, P;
   uint32_t timeLastTempMeas, timeout, D1, D2;
 
   void Init();
   
   void RESET();
-  byte* PROM_READ(byte addr);
+  void PROM_READ(byte addr, byte* receiveBuffer);
 
   void PerformPressMeas();
   void PerformTempMeas();
   uint32_t ReadResult();
-  int32_t GetPress(uint32_t D1);
-  int32_t GetTemp(uint32_t D2);
+  void CalcPress();
+  void CalcTemp();
   bool ReadD1();
   void PerformTempMeasAndReadD2();
 };
