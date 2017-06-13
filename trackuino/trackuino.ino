@@ -52,6 +52,7 @@
 #include "SPIX1.h"
 #include "Flash.h"
 #include "Sensors.h"
+#include "GPSX.h"
 
 // Module constants
 static const uint32_t VALID_POS_TIMEOUT = 2000;  // ms
@@ -61,6 +62,7 @@ static uint32_t gps_timeout;
 static int32_t next_aprs = 0;
 
 Sensors sensors;
+GPSX gpsx;
 
 void setup()
 {
@@ -80,14 +82,15 @@ void setup()
 
   spi0.Init();
   spi1.Init();
+  Serial.begin(GPS_BAUDRATE);
 
   bool flashErase = flash.Init();
-  Serial.begin(GPS_BAUDRATE);
   afsk_setup();
   gps_setup();
   static RadioHx1 radio;
   radio.setup();
 
+  gpsx.Init();
   sensors.Init();
 
   if (flashErase)
@@ -119,7 +122,7 @@ void get_pos()
   }
 
   if (valid_pos) {
-    saveGPSPoint();
+    gpsx.saveGPSPoint();
     gps_reset_parser();
   }
 }
@@ -127,9 +130,9 @@ void get_pos()
 void loop()
 {
   get_pos();
-  
+
   sensors.Handle();
-  
+
   // Time for another APRS frame
   if ((int32_t) (millis() - next_aprs) >= 0) {
     aprs_send();
@@ -144,44 +147,3 @@ void loop()
 #endif
   }
 }
-
-union floatConvert
-{
-  float fl;
-  byte bytes[4];
-};
-
-void saveGPSPoint()
-{
-  floatConvert conv;
-  byte point[POINT_LEN_GPS];
-  uint32_t timeStamp = micros();
-
-  point[0] = POINT_INDICATOR_GPS;
-
-  point[1] = timeStamp >> 24;
-  point[2] = timeStamp >> 16;
-  point[3] = timeStamp >> 8;
-  point[4] = timeStamp;
-
-  point[5] = gps_seconds >> 24;
-  point[6] = gps_seconds >> 16;
-  point[7] = gps_seconds >> 8;
-  point[8] = gps_seconds;
-
-  conv.fl = atof(gps_aprs_lat);
-  if (gps_aprs_lat[7] != 'N') conv.fl = -conv.fl;
-  memcpy(point + 9, conv.bytes, 4);
-
-  conv.fl = atof(gps_aprs_lon);
-  if (gps_aprs_lon[8] != 'E') conv.fl = -conv.fl;
-  memcpy(point + 13, conv.bytes, 4);
-
-  conv.fl = gps_altitude;
-  memcpy(point + 17, conv.bytes, 4);
-
-  point[21] = gps_satellites;
-
-  flash.Write(point, POINT_LEN_GPS);
-}
-
