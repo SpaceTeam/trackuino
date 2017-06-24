@@ -7,10 +7,12 @@
 #include "Acc.h"
 #include "HighG.h"
 #include "Gyro.h"
+#include "Flight.h"
 
 #define PERIOD_TEMP_MEAS 100
+#define SAVE_PERIOD_IDLE 10
 
-enum sensorsState {
+enum fastModeState {
   waitBar,
   waitAcc,
   waitHG,
@@ -26,7 +28,8 @@ class Sensors
   Bar bar;
   Gyro gyro;
 
-  sensorsState state;
+  fastModeState state;
+  uint32_t timestamp_last_point_saved;
 
   int32_t TEMP, P;
 
@@ -35,6 +38,8 @@ class Sensors
   void HandleFastMode();
   void saveSensorsPoint();
 };
+
+extern Sensors sensors;
 
 #endif
 

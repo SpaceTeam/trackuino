@@ -4,11 +4,12 @@
 #include "Arduino.h"
 #include "SPIX0.h"
 
+#define ACC_LSB 4e-3
+
 class Acc
 {
   public:
   int accx, accy, accz;
-  const float g_lsb = 0.004;
 
   void Init();
   byte ReadRegister(byte addr);

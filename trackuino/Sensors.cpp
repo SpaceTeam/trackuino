@@ -1,5 +1,7 @@
 #include "Sensors.h"
 
+Sensors sensors;
+
 void Sensors::Init()
 {
   bar.Init();
@@ -15,6 +17,7 @@ void Sensors::Init()
 void Sensors::Handle()
 {
   while (!bar.ReadD1()) {}
+
   if (millis() - bar.timeLastTempMeas > PERIOD_TEMP_MEAS)
   {
     bar.PerformTempMeasAndReadD2();
@@ -22,15 +25,27 @@ void Sensors::Handle()
   }
   bar.PerformPressMeas();
 
-  while(!acc.ReadXYZ()) {}
+  while (!acc.ReadXYZ()) {}
 
-  while(!hg.ReadXYZ()) {}
+  while (!hg.ReadXYZ()) {}
 
-  while(!gyro.ReadXYZ()) {}
-
-  while(!((flash.RDSR1() & 1) == 0)) {}
-
-  saveSensorsPoint();
+  while (!gyro.ReadXYZ()) {}
+  
+  if (flight.state == flightStateIdle) //if in idle and not flight or trigger state save only every SAVE_PERIOD_IDLE ms
+  {
+    if (millis() - timestamp_last_point_saved > SAVE_PERIOD_IDLE)
+    {
+      while (!((flash.RDSR1() & 1) == 0)) {}
+      saveSensorsPoint();
+      timestamp_last_point_saved = millis();
+    }
+  }
+  else //else save it anyway
+  {
+    while (!((flash.RDSR1() & 1) == 0)) {}
+    saveSensorsPoint();
+    timestamp_last_point_saved = millis();
+  }
 }
 
 void Sensors::HandleFastMode()
@@ -41,7 +56,7 @@ void Sensors::HandleFastMode()
       if (!bar.ReadD1()) return;
 
       bar.PerformPressMeas();
-      
+
       state = waitAcc;
       break;
 
@@ -64,9 +79,19 @@ void Sensors::HandleFastMode()
       break;
 
     case waitFlash:
+      if (flight.state == flightStateIdle) //if in idle and not flight or trigger state save only every SAVE_PERIOD_IDLE ms
+      {
+        if (millis() - timestamp_last_point_saved < SAVE_PERIOD_IDLE)
+        {
+          state = waitBar;
+          return;
+        }
+      }
+
       if (flash.RDSR1() & 1 == 0) return;
 
       saveSensorsPoint();
+      timestamp_last_point_saved = millis();
 
       state = waitBar;
       break;

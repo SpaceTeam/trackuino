@@ -15,8 +15,6 @@
 #define POINT_POS_HG   17
 #define POINT_POS_GYRO 23
 
-#define SENSOR_TIMEOUT 10
-
 #define PAGE_SIZE 256
 #define MEM_SIZE 32768000
 

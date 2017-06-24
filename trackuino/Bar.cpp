@@ -9,10 +9,10 @@ void Bar::RESET()
   spi0.Transmit(sendData, 1);
 
   //wait while MISO is low and reset is performed
-  uint32_t ts = millis();
+  uint32_t ts = micros();
   do
   {
-    if (millis() - ts > SENSOR_TIMEOUT) break;
+    if (micros() - ts > SENSOR_TIMEOUT) break;
     SPDR0 = 0;
     while (!(SPSR0 & 0x80));
   } while (SPDR0 == 0);
@@ -68,6 +68,8 @@ void Bar::PerformPressMeas()
   spi0.Transmit(sendData, 1);
 
   PORTD |= (1 << 5);
+  
+  timeout = micros();
 }
 
 void Bar::PerformTempMeas()
@@ -79,6 +81,8 @@ void Bar::PerformTempMeas()
   spi0.Transmit(sendData, 1);
 
   PORTD |= (1 << 5);
+
+  timeout = micros();
 }
 
 uint32_t Bar::ReadResult()
@@ -93,8 +97,6 @@ uint32_t Bar::ReadResult()
   PORTD |= (1 << 5);
 
   uint32_t D = ((uint32_t)response[0] << 16) | ((uint32_t)response[1] << 8) | response[2];
-
-  //Serial.print("\n" + String(response[0],HEX) + "; "  + String(response[1],HEX) + "; "  + String(response[2],HEX) + "; "  + String(response[3],HEX) + "; "  + String(response[4],HEX));
 
   return D;
 }
@@ -146,20 +148,19 @@ void Bar::CalcTemp()
 
 bool Bar::ReadD1()
 {
+  if(micros() - timeout < PERFORM_TIME) return false;
+  
   D1 = ReadResult();
 
   if (D1 == 0)
   {
-    if (millis() - timeout < SENSOR_TIMEOUT) return false;
+    if (micros() - timeout < SENSOR_TIMEOUT) return false;
     else
     {
       PerformPressMeas();
-      timeout = millis();
       return true;
     }
   }
-
-  timeout = millis();
 
   return true;
 }
@@ -171,11 +172,11 @@ void Bar::PerformTempMeasAndReadD2()
   PORTD &= ~(1 << 5);
   spi0.Transmit(sendData, 1);
 
-  uint32_t ts = millis();
+  uint32_t ts = micros();
   //wait while MISO is low and measuremt is performed:
   do
   {
-    if (millis() - ts > SENSOR_TIMEOUT) break;
+    if (micros() - ts > SENSOR_TIMEOUT) break;
     SPDR0 = 0;
     while (!(SPSR0 & 0x80));
   } while (SPDR0 == 0);
@@ -184,7 +185,7 @@ void Bar::PerformTempMeasAndReadD2()
 
   do
   {
-    if (millis() - ts > SENSOR_TIMEOUT) break;
+    if (micros() - ts > SENSOR_TIMEOUT) break;
     D2 = ReadResult();
   } while (D2 == 0);
 }

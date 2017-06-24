@@ -3,13 +3,13 @@
 
 #include "Arduino.h"
 #include "SPIX0.h"
-#include "Flash.h"
+
+#define HIGH_G_LSB 49e-3
 
 class HighG
 {
   public:
   int accx, accy, accz;
-  const float g_lsb = 0.049;
 
   void Init();
   byte ReadRegister(byte addr);

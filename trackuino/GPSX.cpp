@@ -165,7 +165,6 @@ void GPSX::CFG_RATE(uint16_t measRate, uint16_t navRate, uint16_t timeRef)
   uint8_t payload[] =  {measRate, measRate>>8, navRate, navRate>>8, timeRef, timeRef>>8};
 
   buildUBXpacket(0x06, 0x08, 6, payload, packet);
-  for(int i=0;i<14; i++) Serial.print("; "+String(packet[i],HEX));
 
   sendUBX_and_getUBX_ACK(packet, 14);
 }

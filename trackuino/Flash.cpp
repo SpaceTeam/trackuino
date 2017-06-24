@@ -189,7 +189,7 @@ void Flash::Write(byte* data, int len)
     PP(memPos + pagePos, data, len);
     pagePos += len;
   }
-  else
+  else if (memPos < MEM_SIZE - PAGE_SIZE)
   {
     memPos += PAGE_SIZE;
     PP(memPos, data, len);

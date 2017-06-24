@@ -1,6 +1,4 @@
 #include "Acc.h"
-#include "SPIX0.h"
-#include "Flash.h"
 
 byte Acc::ReadRegister(byte addr)
 {

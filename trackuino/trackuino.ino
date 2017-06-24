@@ -133,6 +133,8 @@ void loop()
 
   sensors.Handle();
 
+  flight.Handle();
+
   // Time for another APRS frame
   if ((int32_t) (millis() - next_aprs) >= 0) {
     aprs_send();

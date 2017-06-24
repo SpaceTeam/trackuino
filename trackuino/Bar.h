@@ -5,6 +5,9 @@
 #include "SPIX0.h"
 #include "Flash.h"
 
+#define SENSOR_TIMEOUT 2000 //in us
+#define PERFORM_TIME 800 //in us
+
 class Bar
 {
   public:
