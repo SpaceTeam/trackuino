@@ -53,6 +53,7 @@
 #include "Flash.h"
 #include "Sensors.h"
 #include "GPSX.h"
+#include "ReadMem.h"
 
 // Module constants
 static const uint32_t VALID_POS_TIMEOUT = 2000;  // ms
@@ -61,11 +62,37 @@ static uint32_t gps_timeout;
 // Module variables
 static int32_t next_aprs = 0;
 
-Sensors sensors;
 GPSX gpsx;
+ReadMem readmem;
 
 void setup()
 {
+  spi0.Init();
+  spi1.Init();
+
+  bool flashErase = flash.Init();
+
+  if (!flashErase)
+  {
+    if (readmem.CheckCom())
+    {
+      readmem.ReadAndSendData();
+    }
+  }
+
+  //5v on
+  PORTC |= 1 << 3;
+  DDRC |= (1 << 3);
+
+  Serial.begin(GPS_BAUDRATE);
+  afsk_setup();
+  gps_setup();
+  static RadioHx1 radio;
+  radio.setup();
+
+  gpsx.Init();
+  sensors.Init();
+
   //blink led
   DDRE |= 1 << 2;
   for (int i = 0; i < 5; i++)
@@ -75,23 +102,6 @@ void setup()
     PORTE &= ~(1 << 2);
     delay(200);
   }
-
-  //5v on
-  PORTC |= 1 << 3;
-  DDRC |= (1 << 3);
-
-  spi0.Init();
-  spi1.Init();
-  Serial.begin(GPS_BAUDRATE);
-
-  bool flashErase = flash.Init();
-  afsk_setup();
-  gps_setup();
-  static RadioHx1 radio;
-  radio.setup();
-
-  gpsx.Init();
-  sensors.Init();
 
   if (flashErase)
   {
