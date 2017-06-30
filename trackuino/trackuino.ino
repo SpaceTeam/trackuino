@@ -60,7 +60,7 @@ static const uint32_t VALID_POS_TIMEOUT = 2000;  // ms
 static uint32_t gps_timeout;
 
 // Module variables
-static int32_t next_aprs = 0;
+static uint32_t last_aprs = 0;
 
 GPSX gpsx;
 
@@ -113,8 +113,6 @@ void setup()
 
   byte reset_point[] = { POINT_INDICATOR_RESET };
   flash.Write(reset_point, 1);
-
-  next_aprs = millis();
 }
 
 void get_pos()
@@ -149,11 +147,12 @@ void loop()
   flight.Handle();
 
   // Time for another APRS frame
-  if (gps_fixq > 0)
+  if (millis() - last_aprs >= (uint32_t)APRS_PERIOD*1000) 
   {
-    if ((int32_t) (millis() - next_aprs) >= 0) {
+    if (gps_fixq > 0)
+    {
       aprs_send();
-      next_aprs += APRS_PERIOD * 1000L;
+      last_aprs = millis();
       while (afsk_flush()) {
         sensors.HandleFastMode();
       }
