@@ -82,7 +82,7 @@ void GPSX::saveGPSPoint()
 {
   floatConvert conv;
   byte point[POINT_LEN_GPS];
-  uint32_t timeStamp = micros();
+  uint32_t timeStamp = millis();
 
   point[0] = POINT_INDICATOR_GPS;
 

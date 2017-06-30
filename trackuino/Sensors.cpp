@@ -101,7 +101,7 @@ void Sensors::HandleFastMode()
 void Sensors::saveSensorsPoint()
 {
   byte sensorPoint[POINT_LEN_SENSORS];
-  uint32_t timeStamp = micros();
+  uint32_t timeStamp = millis();
 
   sensorPoint[0] = POINT_INDICATOR_SENSORS;
 
