@@ -3,8 +3,7 @@
 
 #include "Arduino.h"
 #include "SPIX0.h"
-
-#define HIGH_G_LSB 49e-3
+#include "configX.h"
 
 class HighG
 {

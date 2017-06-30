@@ -4,8 +4,7 @@
 #include "Arduino.h"
 #include "SPIX1.h"
 #include "Flash.h"
-
-#define COM_TIMEOUT 10000 //wait 10 secs until pc responds
+#include "configX.h"
 
 class ReadMem
 {

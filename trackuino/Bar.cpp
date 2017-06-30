@@ -12,7 +12,7 @@ void Bar::RESET()
   uint32_t ts = micros();
   do
   {
-    if (micros() - ts > SENSOR_TIMEOUT) break;
+    if (micros() - ts > BAR_TIMEOUT) break;
     SPDR0 = 0;
     while (!(SPSR0 & 0x80));
   } while (SPDR0 == 0);
@@ -34,6 +34,8 @@ void Bar::PROM_READ(byte addr, byte* receiveBuffer)
 void Bar::Init()
 {
   RESET();
+
+  delay(10);
 
   byte resp[2];
 
@@ -148,13 +150,13 @@ void Bar::CalcTemp()
 
 bool Bar::ReadD1()
 {
-  if(micros() - timeout < PERFORM_TIME) return false;
+  if(micros() - timeout < BAR_PERFORM_TIME) return false;
   
   D1 = ReadResult();
 
   if (D1 == 0)
   {
-    if (micros() - timeout < SENSOR_TIMEOUT) return false;
+    if (micros() - timeout < BAR_TIMEOUT) return false;
     else
     {
       PerformPressMeas();
@@ -168,24 +170,24 @@ bool Bar::ReadD1()
 void Bar::PerformTempMeasAndReadD2()
 {
   //perform temperature measurement
-  byte sendData[] = { 0x50 };
-  PORTD &= ~(1 << 5);
-  spi0.Transmit(sendData, 1);
+  PerformTempMeas();
+//    byte sendData[] = { 0x50 };
+//
+//  PORTD &= ~(1 << 5);
+//
+//  spi0.Transmit(sendData, 1);
+//  do
+//  {
+//    SPDR0 = 0;
+//    while (!(SPSR0 & 0x80));
+//  }while(SPDR0==0);
+//
+//  PORTD |= (1 << 5);
 
-  uint32_t ts = micros();
-  //wait while MISO is low and measuremt is performed:
+  delayMicroseconds(BAR_PERFORM_TIME);
   do
   {
-    if (micros() - ts > SENSOR_TIMEOUT) break;
-    SPDR0 = 0;
-    while (!(SPSR0 & 0x80));
-  } while (SPDR0 == 0);
-
-  PORTD |= 1 << 5;
-
-  do
-  {
-    if (micros() - ts > SENSOR_TIMEOUT) break;
+    if (micros() - timeout > BAR_TIMEOUT) break;
     D2 = ReadResult();
   } while (D2 == 0);
 }

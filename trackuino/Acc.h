@@ -3,8 +3,7 @@
 
 #include "Arduino.h"
 #include "SPIX0.h"
-
-#define ACC_LSB 4e-3
+#include "configX.h"
 
 class Acc
 {

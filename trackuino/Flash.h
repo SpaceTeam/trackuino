@@ -3,20 +3,7 @@
 
 #include "Arduino.h"
 #include "SPIX1.h"
-
-#define POINT_INDICATOR_SENSORS 0xd2
-#define POINT_INDICATOR_GPS 0xb9
-
-#define POINT_LEN_SENSORS 29
-#define POINT_LEN_GPS 22
-
-#define POINT_POS_BAR  5
-#define POINT_POS_ACC  11
-#define POINT_POS_HG   17
-#define POINT_POS_GYRO 23
-
-#define PAGE_SIZE 256
-#define MEM_SIZE 32768000
+#include "configX.h"
 
 class Flash
 {

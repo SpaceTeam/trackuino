@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "gps.h"
 #include "Flash.h"
+#include "configX.h"
 
 class GPSX
 {

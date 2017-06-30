@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "SPIX0.h"
 #include "Flash.h"
+#include "configX.h"
 
 class Gyro
 {

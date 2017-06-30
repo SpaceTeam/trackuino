@@ -8,9 +8,7 @@
 #include "HighG.h"
 #include "Gyro.h"
 #include "Flight.h"
-
-#define PERIOD_TEMP_MEAS 100
-#define SAVE_PERIOD_IDLE 10
+#include "configX.h"
 
 enum fastModeState {
   waitBar,
