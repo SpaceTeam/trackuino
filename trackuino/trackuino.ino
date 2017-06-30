@@ -110,7 +110,9 @@ void setup()
 
   gps_reset_parser();
   gps_timeout = millis();
-  while (gps_fixq == 0) get_pos(); //wait for gps fix
+
+  byte reset_point[] = { POINT_INDICATOR_RESET };
+  flash.Write(reset_point, 1);
 
   next_aprs = millis();
 }
@@ -131,8 +133,9 @@ void get_pos()
     valid_pos = gps_decode(Serial.read());
   }
 
-  if (valid_pos) {
-    gpsx.saveGPSPoint();
+  if (valid_pos)
+  {
+    if (gps_fixq > 0) gpsx.saveGPSPoint();
     gps_reset_parser();
   }
 }
@@ -146,16 +149,19 @@ void loop()
   flight.Handle();
 
   // Time for another APRS frame
-  if ((int32_t) (millis() - next_aprs) >= 0) {
-    aprs_send();
-    next_aprs += APRS_PERIOD * 1000L;
-    while (afsk_flush()) {
-      sensors.HandleFastMode();
-    }
+  if (gps_fixq > 0)
+  {
+    if ((int32_t) (millis() - next_aprs) >= 0) {
+      aprs_send();
+      next_aprs += APRS_PERIOD * 1000L;
+      while (afsk_flush()) {
+        sensors.HandleFastMode();
+      }
 
 #ifdef DEBUG_MODEM
-    // Show modem ISR stats from the previous transmission
-    afsk_debug();
+      // Show modem ISR stats from the previous transmission
+      afsk_debug();
 #endif
+    }
   }
 }
