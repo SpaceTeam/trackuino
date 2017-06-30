@@ -1,0 +1,30 @@
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\DataLogger.exe.config
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\DataLogger.exe
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\DataLogger.pdb
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.exe
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.pdb
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\obj\Debug\DataLogger.exe
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\obj\Debug\DataLogger.pdb
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\bin\Debug\DataLogger.exe.config
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\bin\Debug\DataLogger.exe
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\bin\Debug\DataLogger.pdb
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\bin\Debug\DataLogger.exe.config
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\obj\Debug\DataLogger.exe
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\obj\Debug\DataLogger.pdb
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\bin\Debug\DataLogger.exe
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\bin\Debug\DataLogger.pdb
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy - Kopie\DataLogger\bin\Debug\DataLogger.exe.config
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy - Kopie\DataLogger\obj\Debug\DataLogger.exe
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy - Kopie\DataLogger\obj\Debug\DataLogger.pdb
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy - Kopie\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy - Kopie\DataLogger\bin\Debug\DataLogger.exe
+C:\Users\hausa\OneDrive\SpaceTeam\software\DataLogger - Copy - Kopie\DataLogger\bin\Debug\DataLogger.pdb
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\DataLogger.exe.config
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\DataLogger.exe
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\DataLogger.pdb
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.exe
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.pdb
