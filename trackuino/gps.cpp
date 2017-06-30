@@ -107,6 +107,8 @@ static float new_lat;
 static float new_lon;
 static char new_aprs_lat[9];
 static char new_aprs_lon[10];
+static char new_save_lat[12];
+static char new_save_lon[13];
 static float new_course;
 static float new_speed;
 static float new_altitude;
@@ -120,6 +122,8 @@ float gps_lat = 0;
 float gps_lon = 0;
 char gps_aprs_lat[9];
 char gps_aprs_lon[10];
+char gps_save_lat[12];
+char gps_save_lon[13];
 float gps_course = 0;
 float gps_speed = 0;
 float gps_altitude = 0;
@@ -185,6 +189,9 @@ void parse_lat(const char *token)
   // APRS-ready latitude
   strncpy(new_aprs_lat, token, 7);
   new_aprs_lat[7] = '\0';
+  // latitude to be saved in flash memory
+  strncpy(new_save_lat, token, 10);
+  new_save_lat[10] = '\0';
 }
 
 void parse_lat_hemi(const char *token)
@@ -192,7 +199,9 @@ void parse_lat_hemi(const char *token)
   if (token[0] == 'S')
     new_lat = -new_lat;
   new_aprs_lat[7] = token[0];
-  new_aprs_lon[8] = '\0';
+  new_aprs_lat[8] = '\0';
+  new_save_lat[10] = token[0];
+  new_save_lat[11] = '\0';
 }
 
 void parse_lon(const char *token)
@@ -209,6 +218,9 @@ void parse_lon(const char *token)
   // APRS-ready longitude
   strncpy(new_aprs_lon, token, 8);
   new_aprs_lon[8] = '\0';
+  // longitude to be saved in flash memory
+  strncpy(new_save_lon, token, 11);
+  new_save_lon[11] = '\0';
 }
 
 void parse_lon_hemi(const char *token)
@@ -217,6 +229,8 @@ void parse_lon_hemi(const char *token)
     new_lon = -new_lon;
   new_aprs_lon[8] = token[0];
   new_aprs_lon[9] = '\0';
+  new_save_lon[11] = token[0];
+  new_save_lon[12] = '\0';
 }
 
 void parse_speed(const char *token)
@@ -252,6 +266,8 @@ void gps_setup() {
   strcpy(gps_time, "000000");
   strcpy(gps_aprs_lat, "0000.00N");
   strcpy(gps_aprs_lon, "00000.00E");
+  strcpy(gps_save_lat, "0000.00000N");
+  strcpy(gps_save_lon, "00000.00000E");
 }
 
 void gps_reset_parser() {
@@ -319,6 +335,8 @@ bool gps_decode(char c)
           gps_lon = new_lon;
           strcpy(gps_aprs_lat, new_aprs_lat);
           strcpy(gps_aprs_lon, new_aprs_lon);
+          strcpy(gps_save_lat, new_save_lat);
+          strcpy(gps_save_lon, new_save_lon);
           gps_course = new_course;
           gps_speed = new_speed;
           gps_altitude = new_altitude;

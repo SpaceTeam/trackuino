@@ -91,23 +91,18 @@ void GPSX::saveGPSPoint()
   point[3] = timeStamp >> 8;
   point[4] = timeStamp;
 
-  point[5] = gps_seconds >> 24;
-  point[6] = gps_seconds >> 16;
-  point[7] = gps_seconds >> 8;
-  point[8] = gps_seconds;
+  memcpy(point + POINT_POS_TIME, gps_time, 6);
 
-  conv.fl = atof(gps_aprs_lat);
-  if (gps_aprs_lat[7] != 'N') conv.fl = -conv.fl;
-  memcpy(point + 9, conv.bytes, 4);
+  memcpy(point + POINT_POS_LAT, gps_save_lat, 11);
 
-  conv.fl = atof(gps_aprs_lon);
-  if (gps_aprs_lon[8] != 'E') conv.fl = -conv.fl;
-  memcpy(point + 13, conv.bytes, 4);
+  memcpy(point + POINT_POS_LON, gps_save_lon, 12);
 
   conv.fl = gps_altitude;
-  memcpy(point + 17, conv.bytes, 4);
+  memcpy(point + POINT_POS_ALT, conv.bytes, 4);
 
-  point[21] = gps_satellites;
+  point[POINT_POS_SATS] = gps_satellites;
+
+  point[POINT_POS_FIXQ] = gps_fixq;
 
   flash.Write(point, POINT_LEN_GPS);
 }
@@ -126,7 +121,7 @@ void GPSX::buildUBXpacket(byte CLASS, byte ID, uint16_t LENGTH, byte* Payload, b
   memcpy(Packet + 6, Payload, LENGTH);
   Packet[LENGTH + 6] = 0;
   Packet[LENGTH + 7] = 0;
-  
+
   // Calculate the checksums
   for (uint8_t i = 2; i < LENGTH + 6; i++) {
     CK_A = CK_A + Packet[i];
@@ -162,7 +157,7 @@ void GPSX::setFlightMode()
 void GPSX::CFG_RATE(uint16_t measRate, uint16_t navRate, uint16_t timeRef)
 {
   uint8_t packet[14];
-  uint8_t payload[] =  {measRate, measRate>>8, navRate, navRate>>8, timeRef, timeRef>>8};
+  uint8_t payload[] =  {measRate, measRate >> 8, navRate, navRate >> 8, timeRef, timeRef >> 8};
 
   buildUBXpacket(0x06, 0x08, 6, payload, packet);
 

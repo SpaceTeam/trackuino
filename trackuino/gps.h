@@ -27,6 +27,8 @@ extern float gps_lat;
 extern float gps_lon;
 extern char gps_aprs_lat[9];
 extern char gps_aprs_lon[10];
+extern char gps_save_lat[12];
+extern char gps_save_lon[13];
 extern float gps_course;
 extern float gps_speed;
 extern float gps_altitude;
