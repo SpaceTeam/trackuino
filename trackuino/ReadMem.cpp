@@ -6,23 +6,13 @@ bool ReadMem::CheckCom()
 
   bool comCheck = false;
   uint32_t timeout = millis();
+  char answer[] = {'y', 'e', 's'};
+  byte answerLen = 3;
   do
   {
     Serial.print("should i send my data?\n");
     delay(100);
-    while (Serial.available() > 2)
-    {
-      if (Serial.read() == 'y')
-      {
-        if (Serial.read() == 'e')
-        {
-          if (Serial.read() == 's')
-          {
-            comCheck = true;
-          }
-        }
-      }
-    }
+    comCheck = CheckResponse(answer, answerLen);
   } while (comCheck == false && millis() - timeout < COM_TIMEOUT);
 
   if (!comCheck) Serial.end();
@@ -32,45 +22,81 @@ bool ReadMem::CheckCom()
 
 void ReadMem::ReadAndSendData()
 {
-  byte page[PAGE_SIZE];
-  int i,a;
-  
+  int i;
+  byte spiReadCmd[5];
+  spiReadCmd[0] = 0x13;
+
   Serial.print(String(flash.memPos) + "\n");
+  Serial.print(String(POINT_INDICATOR_RESET) + "\n");
+  Serial.print(String(POINT_INDICATOR_SENSORS) + "\n");
+  Serial.print(String(POINT_INDICATOR_GPS) + "\n");
+  Serial.print(String(POINT_LEN_SENSORS) + "\n");
+  Serial.print(String(POINT_LEN_GPS) + "\n");
+  Serial.print(String(POINT_POS_BAR) + "\n");
+  Serial.print(String(POINT_POS_ACC) + "\n");
+  Serial.print(String(POINT_POS_HG) + "\n");
+  Serial.print(String(POINT_POS_GYRO) + "\n");
+  Serial.print(String(POINT_POS_TIME) + "\n");
+  Serial.print(String(POINT_POS_LAT) + "\n");
+  Serial.print(String(POINT_POS_LON) + "\n");
+  Serial.print(String(POINT_POS_ALT) + "\n");
+  Serial.print(String(POINT_POS_SATS) + "\n");
+  Serial.print(String(POINT_POS_FIXQ) + "\n");
+  Serial.print(String(ACC_LSB,4) + "\n");
+  Serial.print(String(HIGH_G_LSB,4) + "\n");
+  Serial.print(String(GYRO_LSB,4) + "\n");
+  Serial.print(String(PAGE_SIZE) + "\n");
 
   for (uint32_t addr = 0; addr < flash.memPos; addr += PAGE_SIZE)
   {
-    Serial.print("addr=" + String(addr) + "\n");
-    flash.READ(addr, page, PAGE_SIZE);
-    i = 0;
-    a = 0;
-    while (i < PAGE_SIZE - POINT_LEN_GPS && i < PAGE_SIZE - POINT_LEN_SENSORS)
+    Serial.print("page\n");
+    
+    Serial.write(addr >> 24);
+    Serial.write(addr >> 16);
+    Serial.write(addr >> 8);
+    Serial.write(addr);
+
+    spiReadCmd[1] = addr >> 24;
+    spiReadCmd[2] = addr >> 16;
+    spiReadCmd[3] = addr >> 8;
+    spiReadCmd[4] = addr;
+
+    PORTB &= ~1;
+
+    spi1.Transmit(spiReadCmd, 5);
+
+    for (i = 0; i < PAGE_SIZE; i++)
     {
-      switch (page[i])
-      {
-        case POINT_INDICATOR_GPS:
-
-          Serial.print("GPS\n");
-          for(int a=i+1; a<i+POINT_LEN_GPS; a++) Serial.write(page[a]);
-          Serial.write(0x9d);
-
-          i += POINT_LEN_GPS;
-          break;
-
-        case POINT_INDICATOR_SENSORS:
-
-          Serial.print("SEN\n");
-          for(int a=i+1; a<i+POINT_LEN_SENSORS; a++) Serial.write(page[a]);
-          Serial.write(0x9d);
-
-          i += POINT_LEN_SENSORS;
-          break;
-
-        default:
-          i++;
-          break;
-      }
+      SPDR1 = 0;
+      while (!(SPSR1 & 0x80));
+      Serial.write(SPDR1);
     }
+    
+    PORTB |= 1;
   }
 
   Serial.end();
+}
+
+bool ReadMem::CheckResponse(char* expected_response, byte len)
+{
+  bool correct_response = false;
+  byte i;
+
+  uint32_t timeout = millis();
+  while (Serial.available() < len)
+  {
+    if (millis() - timeout > 100) return false;
+  }
+
+  while (Serial.available() > 0)
+  {
+    for (i = 0; i < len; i++)
+    {
+      if (Serial.read() != expected_response[i]) break;
+      if (i == len - 1) correct_response = true;
+    }
+  }
+
+  return correct_response;
 }

@@ -9,8 +9,9 @@
 class ReadMem
 {
   public:
-
+  
   bool CheckCom();
+  bool CheckResponse(char* expected_response, byte len);
   void ReadAndSendData();
 };
 

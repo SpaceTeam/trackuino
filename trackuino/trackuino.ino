@@ -63,7 +63,6 @@ static uint32_t gps_timeout;
 static int32_t next_aprs = 0;
 
 GPSX gpsx;
-ReadMem readmem;
 
 void setup()
 {
@@ -74,6 +73,7 @@ void setup()
 
   if (!flashErase)
   {
+    ReadMem readmem;
     if (readmem.CheckCom())
     {
       readmem.ReadAndSendData();
