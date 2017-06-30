@@ -55,7 +55,7 @@ void HighG::Init()
   WriteRegister(0x31, B00001011); //set full_res and 16g range
   WriteRegister(0x27, 0); //disable act_inact
   WriteRegister(0x2a, 0); //disable tap detection
-  WriteRegister(0x2c, B1111); //set 3200hz rate
+  WriteRegister(0x2c, B1101); //set 800hz rate
   WriteRegister(0x2e, 0); //disable int
   WriteRegister(0x38, 0); //disable fifo
 
