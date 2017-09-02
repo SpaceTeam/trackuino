@@ -28,3 +28,9 @@ C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\bin\Debug\Dat
 C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
 C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.exe
 C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger\DataLogger\obj\Debug\DataLogger.pdb
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger_work\DataLogger\bin\Debug\DataLogger.exe.config
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger_work\DataLogger\bin\Debug\DataLogger.exe
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger_work\DataLogger\bin\Debug\DataLogger.pdb
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger_work\DataLogger\obj\Debug\DataLogger.csprojResolveAssemblyReference.cache
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger_work\DataLogger\obj\Debug\DataLogger.exe
+C:\Users\mhauser\OneDrive\SpaceTeam\software\DataLogger_work\DataLogger\obj\Debug\DataLogger.pdb
