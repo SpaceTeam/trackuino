@@ -62,6 +62,11 @@ void HighG::Init()
   WriteRegister(0x2d, B00001000); //go to measurement mode
 }
 
+void HighG::Standby()
+{
+  WriteRegister(0x2d, B00000000); //reset measure bit to set device to standby
+}
+
 bool HighG::ReadXYZ()
 {
   if(ReadRegister(0x30)&(1<<7) == 0) return false;

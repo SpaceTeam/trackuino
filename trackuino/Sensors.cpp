@@ -102,6 +102,7 @@ void Sensors::saveSensorsPoint()
 {
   byte sensorPoint[POINT_LEN_SENSORS];
   uint32_t timeStamp = millis();
+  uint32_t timeStampMicros = micros();
 
   sensorPoint[0] = POINT_INDICATOR_SENSORS;
 
@@ -109,6 +110,11 @@ void Sensors::saveSensorsPoint()
   sensorPoint[2] = timeStamp >> 16;
   sensorPoint[3] = timeStamp >> 8;
   sensorPoint[4] = timeStamp;
+
+  sensorPoint[5] = timeStampMicros >> 24;
+  sensorPoint[6] = timeStampMicros >> 16;
+  sensorPoint[7] = timeStampMicros >> 8;
+  sensorPoint[8] = timeStampMicros;
 
   sensorPoint[POINT_POS_BAR] = bar.D1 >> 16;
   sensorPoint[POINT_POS_BAR + 1] = bar.D1 >> 8;

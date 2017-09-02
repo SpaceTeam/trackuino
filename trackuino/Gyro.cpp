@@ -11,6 +11,11 @@ void Gyro::Init()
   WriteRegister(0x20,B11111111); //full data rate, bandwidth, normal mode and all axis enabled
 }
 
+void Gyro::PowerDown()
+{
+  WriteRegister(0x20,B00000000); //full data rate, bandwidth, normal mode and all axis enabled
+}
+
 byte Gyro::ReadRegister(byte addr)
 {
   byte sendData[] = {0x80 | addr};

@@ -1,5 +1,7 @@
 #include "GPSX.h"
 
+GPSX gpsx;
+
 void GPSX::Init()
 {
   setFlightMode();
@@ -15,6 +17,59 @@ void GPSX::sendUBX(uint8_t *MSG, uint8_t len)
   Serial.println();
 }
 
+union floatConvert
+{
+  float fl;
+  byte bytes[4];
+};
+
+void GPSX::saveGPSPoint()
+{
+  //save last gps point to send in aprs message in landed state
+  strcpy(last_gps_time, gps_time);
+  strcpy(last_gps_aprs_lat, gps_aprs_lat);
+  strcpy(last_gps_aprs_lon, gps_aprs_lon);
+  last_gps_altitude = gps_altitude;
+  last_gps_fixq = gps_fixq;
+
+
+  //save gps point to flash
+  floatConvert conv;
+  byte point[POINT_LEN_GPS];
+  uint32_t timeStamp = millis();
+
+  point[0] = POINT_INDICATOR_GPS;
+
+  point[1] = timeStamp >> 24;
+  point[2] = timeStamp >> 16;
+  point[3] = timeStamp >> 8;
+  point[4] = timeStamp;
+
+  memcpy(point + POINT_POS_TIME, gps_time, 6);
+
+  memcpy(point + POINT_POS_LAT, gps_save_lat, 11);
+
+  memcpy(point + POINT_POS_LON, gps_save_lon, 12);
+
+  conv.fl = gps_altitude;
+  memcpy(point + POINT_POS_ALT, conv.bytes, 4);
+
+  point[POINT_POS_SATS] = gps_satellites;
+
+  point[POINT_POS_FIXQ] = gps_fixq;
+
+  flash.Write(point, POINT_LEN_GPS);
+}
+
+void GPSX::copyLastPosToBuf()
+{
+  //save last gps point to send in aprs message in landed state
+  strcpy(gps_time, gpsx.last_gps_time);
+  strcpy(gps_aprs_lat, gpsx.last_gps_aprs_lat);
+  strcpy(gps_aprs_lon, gpsx.last_gps_aprs_lon);
+  gps_altitude = gpsx.last_gps_altitude;
+  gps_fixq = gpsx.last_gps_fixq;
+}
 
 // Calculate expected UBX ACK packet and parse UBX response from GPS
 boolean GPSX::getUBX_ACK(uint8_t *MSG)
@@ -72,41 +127,6 @@ boolean GPSX::getUBX_ACK(uint8_t *MSG)
   }
 }
 
-union floatConvert
-{
-  float fl;
-  byte bytes[4];
-};
-
-void GPSX::saveGPSPoint()
-{
-  floatConvert conv;
-  byte point[POINT_LEN_GPS];
-  uint32_t timeStamp = millis();
-
-  point[0] = POINT_INDICATOR_GPS;
-
-  point[1] = timeStamp >> 24;
-  point[2] = timeStamp >> 16;
-  point[3] = timeStamp >> 8;
-  point[4] = timeStamp;
-
-  memcpy(point + POINT_POS_TIME, gps_time, 6);
-
-  memcpy(point + POINT_POS_LAT, gps_save_lat, 11);
-
-  memcpy(point + POINT_POS_LON, gps_save_lon, 12);
-
-  conv.fl = gps_altitude;
-  memcpy(point + POINT_POS_ALT, conv.bytes, 4);
-
-  point[POINT_POS_SATS] = gps_satellites;
-
-  point[POINT_POS_FIXQ] = gps_fixq;
-
-  flash.Write(point, POINT_LEN_GPS);
-}
-
 void GPSX::buildUBXpacket(byte CLASS, byte ID, uint16_t LENGTH, byte* Payload, byte* Packet)
 {
   //calculate checksum
@@ -162,4 +182,14 @@ void GPSX::CFG_RATE(uint16_t measRate, uint16_t navRate, uint16_t timeRef)
   buildUBXpacket(0x06, 0x08, 6, payload, packet);
 
   sendUBX_and_getUBX_ACK(packet, 14);
+}
+
+void GPSX::RXM_PMREQ(uint32_t duration, uint32_t flags)
+{
+  uint8_t packet[16];
+  uint8_t payload[] =  { duration, duration >> 8, duration >> 16, duration >> 24, flags, flags >> 8, flags >> 16, flags >> 24 };
+
+  buildUBXpacket(0x02, 0x41, 8, payload, packet);
+
+  sendUBX(packet, 16);
 }

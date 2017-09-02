@@ -11,6 +11,7 @@ class Acc
   int accx, accy, accz;
 
   void Init();
+  void Standby();
   byte ReadRegister(byte addr);
   void ReadMultipleRegisters(byte addr, byte* receiveBuffer, byte amount);
   byte WriteRegister(byte addr, byte data);

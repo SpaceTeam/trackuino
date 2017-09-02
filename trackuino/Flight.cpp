@@ -9,7 +9,7 @@ void Flight::Handle()
     case flightStateIdle:
       if (TriggerOn())
       {
-        trigger_timestamp = millis();
+        timestamp = millis();
         state = flightStateTrigger;
       }
       break;
@@ -17,10 +17,10 @@ void Flight::Handle()
     case flightStateTrigger:
       if (TriggerOn())
       {
-        if (millis() - trigger_timestamp > TRIGGER_ON_TIME)
+        if (millis() - timestamp > TRIGGER_ON_TIME)
         {
           state = flightStateFlight;
-          flight_timestamp = millis();
+          timestamp = millis();
         }
       }
       else
@@ -30,9 +30,25 @@ void Flight::Handle()
       break;
 
     case flightStateFlight:
-      if (millis() - flight_timestamp > (uint32_t)FLIGHT_TIME * 60000)
+      if (millis() - timestamp > (uint32_t)FLIGHT_TIME * 60000)
       {
-        state = flightStateIdle;
+        state = flightStateFindPos;
+        timestamp = millis();
+
+        gpsx.CFG_RATE(5000, 1, 1);
+        sensors.acc.Standby();
+        sensors.hg.Standby();
+        sensors.gyro.PowerDown();
+      }
+      break;
+
+    case flightStateFindPos:
+      if (millis() - timestamp > (uint32_t)FIND_POS_TIME * 60000)
+      {
+        state = flightStatePing;
+
+        actual_aprs_period = (uint32_t)APRS_PERIOD_LANDED * 1000;
+        gpsx.RXM_PMREQ(0, 2); //set gps module to backup mode
       }
       break;
   }
@@ -40,10 +56,10 @@ void Flight::Handle()
 
 bool Flight::TriggerOn()
 {
-    if (sensors.hg.accx > TRIGGER_LEVEL_ACC / HIGH_G_LSB || sensors.hg.accy > TRIGGER_LEVEL_ACC / HIGH_G_LSB || sensors.hg.accz > TRIGGER_LEVEL_ACC / HIGH_G_LSB)
-    {
-      return true;
-    }
+  if (sensors.hg.accx > TRIGGER_LEVEL_ACC / HIGH_G_LSB || sensors.hg.accy > TRIGGER_LEVEL_ACC / HIGH_G_LSB || sensors.hg.accz > TRIGGER_LEVEL_ACC / HIGH_G_LSB)
+  {
+    return true;
+  }
 
   return false;
 }

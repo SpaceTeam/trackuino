@@ -11,6 +11,7 @@ class ReadMem
   public:
   
   bool CheckCom();
+  uint8_t CheckIfEraseFlash();
   bool CheckResponse(char* expected_response, byte len);
   void ReadAndSendData();
 };

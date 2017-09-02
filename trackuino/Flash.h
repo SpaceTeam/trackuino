@@ -12,9 +12,10 @@ class Flash
     uint16_t pagePos;
     byte* buf[POINT_LEN_SENSORS];
 
-    bool Init(); //Initialize flash; pointSize = number of bytes one point contains
+    void Init(); //Initialize flash; pointSize = number of bytes one point contains
+    void EraseFlash(); //completely erase flash memory
 
-    void Flash::REMS(byte* manufacturer_id, byte* device_id);
+    void REMS(byte* manufacturer_id, byte* device_id);
     void BRWR(byte BAR); //Bank Register Write (BAR[7] is Extended Address Control Bit EXTADD and is necessary to be set to use 4 byte adresses)
     byte RDSR1(); //ReaD Status Register 1
     void CLSR(); //CLear Status Register

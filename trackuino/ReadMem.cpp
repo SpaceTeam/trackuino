@@ -6,18 +6,40 @@ bool ReadMem::CheckCom()
 
   bool comCheck = false;
   uint32_t timeout = millis();
-  char answer[] = {'y', 'e', 's'};
-  byte answerLen = 3;
+  char answer[] = {'o', 'k'};
+  byte answerLen = 2;
   do
   {
-    Serial.print("should i send my data?\n");
+    Serial.print("send me a command\n");
     delay(100);
     comCheck = CheckResponse(answer, answerLen);
   } while (comCheck == false && millis() - timeout < COM_TIMEOUT);
 
   if (!comCheck) Serial.end();
+  else
+  {
+    Serial.print("got it\n");
+    Serial.print(String(flash.memPos) + "\n");
+  }
 
   return comCheck;
+}
+
+uint8_t ReadMem::CheckIfEraseFlash()
+{
+  while (Serial.available() < 5) {}
+
+  char answer[6];
+
+  for(int i=0; i<5; i++)
+  {
+    answer[i] = Serial.read();
+  }
+  answer[5] = '\0';
+
+  if(strcmp(answer, "erase") == 0) return 1;
+  if(strcmp(answer, "reout") == 0) return 2;
+  return 0;
 }
 
 void ReadMem::ReadAndSendData()
@@ -26,7 +48,6 @@ void ReadMem::ReadAndSendData()
   byte spiReadCmd[5];
   spiReadCmd[0] = 0x13;
 
-  Serial.print(String(flash.memPos) + "\n");
   Serial.print(String(POINT_INDICATOR_RESET) + "\n");
   Serial.print(String(POINT_INDICATOR_SENSORS) + "\n");
   Serial.print(String(POINT_INDICATOR_GPS) + "\n");

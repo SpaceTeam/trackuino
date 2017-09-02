@@ -39,7 +39,7 @@ byte Flash::RDSR1()
   spi1.Transceive(sendData, 1, response, 1);
 
   PORTB |= 1;
-  
+
   return response[0];
 }
 
@@ -121,52 +121,43 @@ void Flash::RESET()
   PORTB |= 1;
 }
 
-bool Flash::Init()
+void Flash::Init()
 {
-  bool delMem = false;
-
-  DDRC &= ~(1 << 4); // configure PE0 as an input (if pulled low flash is deleted)
-
   RESET(); //software reset flash
 
   delay(10);
 
-  if ((PINC & (1 << 4)) == 0)
+  //find boundaries of free memory using kind of a bubble sort:
+  byte actualPage[PAGE_SIZE];
+  unsigned long upperAddr = MEM_SIZE / PAGE_SIZE - PAGE_SIZE;
+  unsigned long lowerAddr = 0;
+  unsigned long actualAddr;
+  do
   {
-    //delete complete memory with bulk erase command (needs max. 330 seconds)
-    WREN();
-    BE();
-    delMem = true;
-    memPos = 0;
-  }
-  else
+    actualAddr = lowerAddr + (upperAddr - lowerAddr) / 2;
+
+    READ(actualAddr << 8, actualPage, PAGE_SIZE);
+
+    if (CheckIfEmpty(actualPage, PAGE_SIZE, 5)) upperAddr = actualAddr;
+    else lowerAddr = actualAddr;
+  } while (upperAddr - lowerAddr > 1);
+  if (upperAddr == 1)
   {
-    //find boundaries of free memory using kind of a bubble sort:
-    byte actualPage[PAGE_SIZE];
-    unsigned long upperAddr = MEM_SIZE / PAGE_SIZE - PAGE_SIZE;
-    unsigned long lowerAddr = 0;
-    unsigned long actualAddr;
-    do
-    {
-      actualAddr = lowerAddr + (upperAddr - lowerAddr) / 2;
-
-      READ(actualAddr << 8, actualPage, PAGE_SIZE);
-
-      if (CheckIfEmpty(actualPage, PAGE_SIZE, 5)) upperAddr = actualAddr;
-      else lowerAddr = actualAddr;
-    } while (upperAddr - lowerAddr > 1);
-    if (upperAddr == 1)
-    {
-      READ(0, actualPage, PAGE_SIZE);
-      if (CheckIfEmpty(actualPage, PAGE_SIZE, 5)) memPos = 0;
-      else memPos = PAGE_SIZE;
-    }
-    else memPos = upperAddr << 8;
+    READ(0, actualPage, PAGE_SIZE);
+    if (CheckIfEmpty(actualPage, PAGE_SIZE, 5)) memPos = 0;
+    else memPos = PAGE_SIZE;
   }
+  else memPos = upperAddr << 8;
 
   pagePos = 0;
+}
 
-  return delMem;
+void Flash::EraseFlash()
+{
+  //delete complete memory with bulk erase command (needs max. 330 seconds)
+  WREN();
+  BE();
+  memPos = 0;
 }
 
 bool Flash::CheckIfEmpty(byte* data, int len, int maxWrittenBytes)

@@ -8,13 +8,13 @@
 #define POINT_INDICATOR_GPS 0xb9
 #define POINT_INDICATOR_RESET 0x13
 
-#define POINT_LEN_SENSORS 29
+#define POINT_LEN_SENSORS 33
 #define POINT_LEN_GPS 41
 
-#define POINT_POS_BAR  5
-#define POINT_POS_ACC  11
-#define POINT_POS_HG   17
-#define POINT_POS_GYRO 23
+#define POINT_POS_BAR  9
+#define POINT_POS_ACC  15
+#define POINT_POS_HG   21
+#define POINT_POS_GYRO 27
 
 #define POINT_POS_TIME 5
 #define POINT_POS_LAT  12
@@ -26,9 +26,11 @@
 #define PAGE_SIZE 256
 #define MEM_SIZE 32768000
 
-#define TRIGGER_LEVEL_ACC 5 //in g
-#define TRIGGER_ON_TIME 100 //in ms
-#define FLIGHT_TIME 5       //in mins
+#define TRIGGER_LEVEL_ACC 5   //in g
+#define TRIGGER_ON_TIME 100   //in ms
+#define FLIGHT_TIME 5         //in min
+#define FIND_POS_TIME 10      //in min
+#define APRS_PERIOD_LANDED 30  //in s
 
 #define COM_TIMEOUT 10000 //wait 10 secs until pc responds
 

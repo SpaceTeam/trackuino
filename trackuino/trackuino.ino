@@ -62,26 +62,30 @@ static uint32_t gps_timeout;
 // Module variables
 static uint32_t last_aprs = 0;
 
-GPSX gpsx;
-
 void setup()
 {
   spi0.Init();
   spi1.Init();
 
-  bool flashErase = flash.Init();
+  flash.Init();
 
-  if (!flashErase)
+  ReadMem readmem;
+  if (readmem.CheckCom())
   {
-    ReadMem readmem;
-    if (readmem.CheckCom())
+    uint8_t eraseFlash = readmem.CheckIfEraseFlash();
+    if (eraseFlash == 1)
     {
-      readmem.ReadAndSendData();
+      flash.EraseFlash();
+      while (flash.RDSR1() & 1); //wait until flash is erased
+      Serial.print("erased\n");
     }
+    else if (eraseFlash == 2) readmem.ReadAndSendData();
+
+    while (true) {} //endless loop
   }
 
-  //5v on
-  PORTC |= 1 << 3;
+  //5v off
+  PORTC &= ~(1 << 3);
   DDRC |= (1 << 3);
 
   Serial.begin(GPS_BAUDRATE);
@@ -101,11 +105,6 @@ void setup()
     delay(200);
     PORTE &= ~(1 << 2);
     delay(200);
-  }
-
-  if (flashErase)
-  {
-    while (flash.RDSR1() & 1); //wait until flash is erased
   }
 
   gps_reset_parser();
@@ -134,33 +133,42 @@ void get_pos()
   if (valid_pos)
   {
     if (gps_fixq > 0) gpsx.saveGPSPoint();
+    else gpsx.copyLastPosToBuf();
     gps_reset_parser();
   }
 }
 
 void loop()
 {
-  get_pos();
+//  //flight test!
+//  if ((gps_fixq > 0) && flight.state < flightStateFlight)
+//  {
+//    flight.state = flightStateFlight;
+//    flight.timestamp = millis();
+//  }
 
-  sensors.Handle();
+  if (flight.state < flightStatePing)
+  {
+    get_pos();
 
-  flight.Handle();
+    if (flight.state < flightStateFindPos) sensors.Handle();
+
+    flight.Handle();
+  }
+  else power_save();
 
   // Time for another APRS frame
-  if (millis() - last_aprs >= (uint32_t)APRS_PERIOD*1000) 
+  if (millis() - last_aprs >= flight.actual_aprs_period)
   {
     if (gps_fixq > 0)
     {
+      PORTC |= (1 << 3);
       aprs_send();
       last_aprs = millis();
       while (afsk_flush()) {
-        sensors.HandleFastMode();
+        if (flight.state < flightStateFindPos) sensors.HandleFastMode();
       }
-
-#ifdef DEBUG_MODEM
-      // Show modem ISR stats from the previous transmission
-      afsk_debug();
-#endif
+      PORTC &= ~(1 << 3);
     }
   }
 }

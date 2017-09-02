@@ -7,18 +7,23 @@
 #include "Acc.h"
 #include "HighG.h"
 #include "Gyro.h"
+#include "GPSX.h"
+#include "config.h"
 #include "configX.h"
 
 enum flightState {
-  flightStateIdle,
-  flightStateTrigger,
-  flightStateFlight
+  flightStateIdle = 0,
+  flightStateTrigger = 1,
+  flightStateFlight = 2,
+  flightStateFindPos = 3,
+  flightStatePing = 4
 };
 
 class Flight
 {
   public:
-  uint32_t trigger_timestamp, flight_timestamp;
+  uint32_t timestamp;
+  uint32_t actual_aprs_period = (uint32_t)APRS_PERIOD * 1000;
 
   flightState state = flightStateIdle;
 
