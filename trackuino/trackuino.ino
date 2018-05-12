@@ -84,8 +84,8 @@ void setup()
     while (true) {} //endless loop
   }
 
-  //5v off
-  PORTC &= ~(1 << 3);
+  //5v on
+  PORTC |= (1 << 3);
   DDRC |= (1 << 3);
 
   Serial.begin(GPS_BAUDRATE);

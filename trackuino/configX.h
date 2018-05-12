@@ -35,7 +35,7 @@
 #define COM_TIMEOUT 10000 //wait 10 secs until pc responds
 
 #define ACC_LSB 4e-3
-#define HIGH_G_LSB 20.5e-3
+#define HIGH_G_LSB 49e-3
 #define GYRO_LSB 1.0
 
 #define BAR_TIMEOUT 2000 //in us
