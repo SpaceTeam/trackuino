@@ -42,7 +42,7 @@ uint8_t ReadMem::CheckIfEraseFlash()
   return 0;
 }
 
-void ReadMem::ReadAndSendData()
+void ReadMem::ReadAndSendData(uint16_t C1, uint16_t C2, uint16_t C3, uint16_t C4, uint16_t C5, uint16_t C6)
 {
   int i;
   byte spiReadCmd[5];
@@ -67,6 +67,12 @@ void ReadMem::ReadAndSendData()
   Serial.print(String(HIGH_G_LSB,4) + "\n");
   Serial.print(String(GYRO_LSB,4) + "\n");
   Serial.print(String(PAGE_SIZE) + "\n");
+  Serial.print(String(C1) + "\n");
+  Serial.print(String(C2) + "\n");
+  Serial.print(String(C3) + "\n");
+  Serial.print(String(C4) + "\n");
+  Serial.print(String(C5) + "\n");
+  Serial.print(String(C6) + "\n");
 
   for (uint32_t addr = 0; addr < flash.memPos; addr += PAGE_SIZE)
   {

@@ -66,8 +66,8 @@ void setup()
 {
   spi0.Init();
   spi1.Init();
-
   flash.Init();
+  sensors.Init();
 
   ReadMem readmem;
   if (readmem.CheckCom())
@@ -79,7 +79,7 @@ void setup()
       while (flash.RDSR1() & 1); //wait until flash is erased
       Serial.print("erased\n");
     }
-    else if (eraseFlash == 2) readmem.ReadAndSendData();
+    else if (eraseFlash == 2) readmem.ReadAndSendData(sensors.bar.C1, sensors.bar.C2, sensors.bar.C3, sensors.bar.C4, sensors.bar.C5, sensors.bar.C6);
 
     while (true) {} //endless loop
   }
@@ -95,7 +95,6 @@ void setup()
   radio.setup();
 
   gpsx.Init();
-  sensors.Init();
 
   //blink led
   DDRE |= 1 << 2;

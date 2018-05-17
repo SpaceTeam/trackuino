@@ -36,6 +36,13 @@ namespace DataLogger
         public static double HIGH_G_LSB;
         public static double GYRO_LSB;
 
+        public static int C1;
+        public static int C2;
+        public static int C3;
+        public static int C4;
+        public static int C5;
+        public static int C6;
+
         public static void Main()
         {
             // Get a list of serial port names.
@@ -126,6 +133,7 @@ namespace DataLogger
             {
                 StreamWriter gps_file = new System.IO.StreamWriter("gps0.csv");
                 StreamWriter sensors_file = new System.IO.StreamWriter("sensors0.csv");
+                StreamWriter bar_calib_file = new System.IO.StreamWriter("bar_calibration.csv");
 
                 string line = "";
 
@@ -152,6 +160,16 @@ namespace DataLogger
                 HIGH_G_LSB = double.Parse(port.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 GYRO_LSB = double.Parse(port.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 PAGE_SIZE = Convert.ToInt32(port.ReadLine());
+                C1 = Convert.ToInt32(port.ReadLine());
+                C2 = Convert.ToInt32(port.ReadLine());
+                C3 = Convert.ToInt32(port.ReadLine());
+                C4 = Convert.ToInt32(port.ReadLine());
+                C5 = Convert.ToInt32(port.ReadLine());
+                C6 = Convert.ToInt32(port.ReadLine());
+
+                bar_calib_file.WriteLine("C1;C2;C3;C4;C5;C6");
+                bar_calib_file.WriteLine(Convert.ToString(C1) + ";" + Convert.ToString(C2) + ";" + Convert.ToString(C3) + ";" + Convert.ToString(C4) + ";" + Convert.ToString(C5) + ";" + Convert.ToString(C6));
+                bar_calib_file.Close();
 
                 Console.WriteLine("\nReceiving data...\n");
                 double timestamp_start = DateTime.Now.TimeOfDay.TotalMilliseconds;

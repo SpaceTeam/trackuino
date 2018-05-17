@@ -105,8 +105,8 @@ uint32_t Bar::ReadResult()
 
 void Bar::CalcPress()
 {
-  int64_t OFF = ((int64_t) C2 << 16) + (((int64_t) dT * C4 ) >> 7);
-  int64_t SENS = ((int32_t) C1 << 15) + (((int64_t) dT * C3 ) >> 8);
+  //int64_t OFF = ((int64_t) bar_c2 << 16) + (((int64_t) dT * bar_c4 ) >> 7);
+  //int64_t SENS = ((int32_t) bar_c1 << 15) + (((int64_t) dT * bar_c3 ) >> 8);
 
   //  int64_t OFF2 = 0;
   //  int64_t SENS2 = 0;
@@ -126,15 +126,15 @@ void Bar::CalcPress()
   //  OFF = OFF - OFF2;
   //  SENS = SENS - SENS2;
 
-  P = ((((D1 * SENS) >> 21) - OFF) >> 15);
+  //P = ((((D1 * SENS) >> 21) - OFF) >> 15);
   //Serial.print("\nOFF="+String((int32_t)(OFF/1000000))+"; SENS="+String((int32_t)(SENS/1000000)));
 }
 
 void Bar::CalcTemp()
 {
-  dT = (uint32_t) D2 - ((uint32_t) C5 << 8);
+  //dT = (uint32_t) D2 - ((uint32_t) bar_c5 << 8);
 
-  TEMP = 2000 + (int32_t)( ((int64_t) dT * C6) >> 23);
+  //TEMP = 2000 + (int32_t)( ((int64_t) dT * bar_c6) >> 23);
 
   //  int32_t TEMP2 = 0;
   //
