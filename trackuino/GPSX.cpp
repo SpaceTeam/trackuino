@@ -6,6 +6,7 @@ void GPSX::Init()
 {
   setFlightMode();
   CFG_RATE(100, 1, 1);
+  CFG_PRT(1, 0, 0b00100011000000, 9600, 0b1, 0b10, 0b10);
 }
 
 // Send a byte array of UBX protocol to the GPS
@@ -192,4 +193,14 @@ void GPSX::RXM_PMREQ(uint32_t duration, uint32_t flags)
   buildUBXpacket(0x02, 0x41, 8, payload, packet);
 
   sendUBX(packet, 16);
+}
+
+void GPSX::CFG_PRT(uint8_t portID, uint16_t txReady, uint32_t mode, uint32_t baudRate, uint16_t inProtoMask, uint16_t outProtoMask, uint16_t flags)
+{
+  uint8_t packet[28];
+  uint8_t payload[] =  { portID, 0, txReady>>8, txReady, mode>>24, mode>>16, mode>>8, mode, baudRate>>24, baudRate>>16, baudRate>>8, baudRate, inProtoMask>>8, inProtoMask, outProtoMask>>8, outProtoMask, flags>>8, flags, 0 };
+
+  buildUBXpacket(0x06, 0x00, 20, payload, packet);
+
+  sendUBX(packet, 28);
 }

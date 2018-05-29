@@ -28,6 +28,7 @@ class GPSX
   void setFlightMode();
   void CFG_RATE(uint16_t measRate, uint16_t navRate, uint16_t timeRef);
   void RXM_PMREQ(uint32_t duration, uint32_t flags);
+  void CFG_PRT(uint8_t portID, uint16_t txReady, uint32_t mode, uint32_t baudRate, uint16_t inProtoMask, uint16_t outProtoMask, uint16_t flags);
 };
 
 extern GPSX gpsx;
