@@ -100,7 +100,7 @@ namespace DataLogger
             do
             {
                 Console.WriteLine("\nCommunication established");
-                Console.WriteLine("\n" + Convert.ToString(memPos) + " bytes of data in flash (" + ((double)memPos / 32768000.0).ToString("0.000") + " % of memory used)\n");
+                Console.WriteLine("\n" + Convert.ToString(memPos) + " bytes of data in flash (" + ((double)memPos / 327680.0).ToString("0.000") + " % of memory used)\n");
                 Console.WriteLine("for reading out data enter 'r'\nfor erasing flash memory enter 'e'\n");
                 cmd = Console.ReadLine();
             } while (cmd != "r" && cmd != "e");
