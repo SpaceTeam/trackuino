@@ -146,18 +146,25 @@ void loop()
 //    flight.timestamp = millis();
 //  }
 
-  if (flight.state < flightStatePing)
+  if(gps_fixq > 0 )
+  {
+      //set oc1 high to indicate gps_fix
+      PORTB |= (1 << 1);
+      DDRB |= (1 << 1);
+  }
+  
+  if (flight.state < flightStateLanded)
   {
     get_pos();
 
-    if (flight.state < flightStateFindPos) sensors.Handle();
+    if (flight.state < flightStatePause) sensors.Handle();
 
     flight.Handle();
   }
   else power_save();
 
   // Time for another APRS frame
-  if (millis() - last_aprs >= flight.actual_aprs_period)
+  if (millis() - last_aprs >= flight.actual_aprs_period && (flight.state == flightStateSend || flight.state == flightStateLanded) )
   {
     if (gps_fixq > 0)
     {
@@ -165,7 +172,7 @@ void loop()
       aprs_send();
       last_aprs = millis();
       while (afsk_flush()) {
-        if (flight.state < flightStateFindPos) sensors.HandleFastMode();
+        if (flight.state < flightStatePause) sensors.HandleFastMode();
       }
       PORTC &= ~(1 << 3);
     }

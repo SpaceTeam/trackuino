@@ -15,6 +15,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+
 // Mpide 22 fails to compile Arduino code because it stupidly defines ARDUINO
 // as an empty macro (hence the +0 hack). UNO32 builds are fine. Just use the
 // real Arduino IDE for Arduino builds. Optionally complain to the Mpide
@@ -146,18 +147,25 @@ void loop()
 //    flight.timestamp = millis();
 //  }
 
-  if (flight.state < flightStatePing)
+  if(gps_fixq > 0 )
+  {
+      //set oc1 high to indicate gps_fix
+      PORTB |= (1 << 1);
+      DDRB |= (1 << 1);
+  }
+  
+  if (flight.state < flightStateLanded)
   {
     get_pos();
 
-    if (flight.state < flightStateFindPos) sensors.Handle();
+    if (flight.state < flightStatePause) sensors.Handle();
 
     flight.Handle();
   }
   else power_save();
 
   // Time for another APRS frame
-  if (millis() - last_aprs >= flight.actual_aprs_period)
+  if (millis() - last_aprs >= flight.actual_aprs_period && (flight.state == flightStateSend || flight.state == flightStateLanded) )
   {
     if (gps_fixq > 0)
     {
@@ -165,7 +173,7 @@ void loop()
       aprs_send();
       last_aprs = millis();
       while (afsk_flush()) {
-        if (flight.state < flightStateFindPos) sensors.HandleFastMode();
+        if (flight.state < flightStatePause) sensors.HandleFastMode();
       }
       PORTC &= ~(1 << 3);
     }

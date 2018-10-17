@@ -28,8 +28,9 @@
 
 #define TRIGGER_LEVEL_ACC 5   //in g
 #define TRIGGER_ON_TIME 100   //in ms
-#define FLIGHT_TIME 15         //in min
-#define FIND_POS_TIME 10      //in min
+#define FLIGHT_TIME 60         //in s
+#define SEND_TIME 300      //in s
+#define PAUSE_TIME 600      //in s
 #define APRS_PERIOD_LANDED 30  //in s
 
 #define COM_TIMEOUT 10000 //wait 10 secs until pc responds
